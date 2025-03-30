@@ -3,12 +3,9 @@ from PIL import Image
 
 st.set_page_config(
     page_title="Leafcura",
-    page_icon="leafcurafix_favicon_512x512.png",  # <– Hier dein Dateiname
+    page_icon="leafcurafix_favicon_512x512.png",
     layout="centered"
 )
-import streamlit as st
-from PIL import Image
-import numpy as np
 
 # Sprachwahl
 lang = st.sidebar.radio("Sprache / Language", ("Deutsch", "English"))
