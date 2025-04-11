@@ -7,10 +7,6 @@ st.set_page_config(page_title="Leafcura",
 
 logo = Image.open("leafcura_logo.png")
 st.image(logo, width=200)
-import os
-
-st.write("📁 Aktuelle Dateien im Ordner:")
-st.write(os.listdir())
 
 # Sprachwahl
 lang = st.sidebar.radio("Sprache / Language", ("Deutsch", "English"))
