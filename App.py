@@ -1,13 +1,11 @@
 import streamlit as st
 from PIL import Image
 
-st.set_page_config(
-    page_title="Leafcura",
+st.set_page_config(page_title="Leafcura",
     page_icon="leafcurafix_favicon_512x512.png",
-    layout="centered"
-)
+    layout="centered")
 
-logo = Image.open("leafcura_logo.png")
+logo = Image.open("leafcura.png")
 st.image(logo, width=200)
 
 # Sprachwahl
