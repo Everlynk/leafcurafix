@@ -9,7 +9,7 @@ st.set_page_config(
 from PIL import Image
 
 logo = Image.open("leafcura_logo.png")
-st.image(logo, width=200)  
+st.image(logo, width=200)
 
 # Sprachwahl
 lang = st.sidebar.radio("Sprache / Language", ("Deutsch", "English"))
