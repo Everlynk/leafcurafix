@@ -7,7 +7,7 @@ st.set_page_config(
     layout="centered"
 )
 
-logo = Image.open("Leafcura_logo.png")
+logo = Image.open("leafcura_logo.png")
 st.image(logo, width=200)
 
 # Sprachwahl
