@@ -6,7 +6,6 @@ st.set_page_config(
     page_icon="leafcurafix_favicon_512x512.png",
     layout="centered"
 )
-from PIL import Image
 
 logo = Image.open("leafcura_logo.png")
 st.image(logo, width=200)
