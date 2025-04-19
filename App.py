@@ -1,81 +1,81 @@
 import streamlit as st
-from PIL import Image
-import random
+from PIL import Image, UnidentifiedImageError
+import io
+import pyheif
 
-# Seitenkonfiguration
+# Seitenlayout & Icon
 st.set_page_config(
     page_title="Leafcura",
     page_icon="leafcurafix_favicon_512x512.png",
     layout="centered"
 )
 
-# Logo anzeigen
+# Logo
 logo = Image.open("leafcura_logo.png")
 st.image(logo, width=200)
 
-# Sprachwahl
+# Sprache auswählen
 lang = st.sidebar.radio("Sprache / Language", ("Deutsch", "English"))
 
-# Titel & Texte
+# Sprachabhängige Texte
 if lang == "Deutsch":
     st.title("LeafcuraFix – Blattdiagnose & Hausmittel")
     upload_label = "📷 Lade ein Bild deines Pflanzenblatts hoch:"
-    analyse_label = "🔬 Analyse starten"
-    analysing = "🔍 Analyse läuft..."
+    analyse_button = "🔍 Analyse starten"
+    analysing = "Analyse läuft..."
+    diagnosis = "Diagnose: Stickstoffmangel"
+    symptoms = "**Symptome:** Vergilbung älterer Blätter, verlangsamtes Wachstum"
+    remedies = "**Hausmittel:**\n- Kaffeesatz ins Substrat\n- Brennnesseljauche\n- pH-Wert zwischen 6.0–6.5 halten"
+    error_text = "❌ Bild konnte nicht geladen werden. Bitte lade ein gültiges JPG, PNG oder HEIC hoch."
 else:
     st.title("LeafcuraFix – Leaf Diagnosis & Natural Remedies")
     upload_label = "📷 Upload a photo of your plant leaf:"
-    analyse_label = "🔬 Start analysis"
-    analysing = "🔍 Analyzing..."
+    analyse_button = "🔍 Start analysis"
+    analysing = "Analyzing..."
+    diagnosis = "Diagnosis: Nitrogen Deficiency"
+    symptoms = "**Symptoms:** Yellowing of older leaves, slowed growth"
+    remedies = "**Remedies:**\n- Coffee grounds\n- Nettle tea\n- Maintain pH between 6.0–6.5"
+    error_text = "❌ Could not load image. Please upload a valid JPG, PNG, or HEIC file."
 
-# Diagnose-Logik vorbereiten
-if lang == "Deutsch":
-    diagnosen = [
-        {
-            "diagnose": "Stickstoffmangel",
-            "symptome": "**Symptome:** Vergilbung älterer Blätter, verlangsamtes Wachstum",
-            "hausmittel": "**Hausmittel:**\n- Kaffeesatz\n- Brennnesseljauche\n- pH-Wert 6.0–6.5"
-        },
-        {
-            "diagnose": "Kaliummangel",
-            "symptome": "**Symptome:** Braune Blattspitzen, eingerollte Ränder",
-            "hausmittel": "**Hausmittel:**\n- Bananenschale\n- Holzasche (sparsam)"
-        },
-        {
-            "diagnose": "Mehltau",
-            "symptome": "**Symptome:** Weißer Belag auf Blattoberfläche",
-            "hausmittel": "**Hausmittel:**\n- 1 Teil Milch + 9 Teile Wasser\n- Natronlösung"
-        }
-    ]
-else:
-    diagnosen = [
-        {
-            "diagnose": "Nitrogen Deficiency",
-            "symptome": "**Symptoms:** Yellowing of older leaves, stunted growth",
-            "hausmittel": "**Remedies:**\n- Coffee grounds\n- Nettle tea\n- Keep pH 6.0–6.5"
-        },
-        {
-            "diagnose": "Potassium Deficiency",
-            "symptome": "**Symptoms:** Brown leaf tips, curled edges",
-            "hausmittel": "**Remedies:**\n- Banana peel\n- Wood ash (sparingly)"
-        },
-        {
-            "diagnose": "Powdery Mildew",
-            "symptome": "**Symptoms:** White powdery coating on leaves",
-            "hausmittel": "**Remedies:**\n- Milk-water spray (1:9)\n- Baking soda solution"
-        }
-    ]
-
-# Bild-Upload & Analyse
-uploaded_file = st.file_uploader(upload_label, type=["jpg", "jpeg", "png"])
+# Bild hochladen
+uploaded_file = st.file_uploader(upload_label, type=["jpg", "jpeg", "png", "heic"])
 
 if uploaded_file:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="📸 Vorschau / Preview", use_column_width=True)
+    try:
+        # HEIC-Bilder erkennen und konvertieren
+        if uploaded_file.name.lower().endswith(".heic"):
+            heif_file = pyheif.read(uploaded_file.read())
+            image = Image.frombytes(
+                heif_file.mode, heif_file.size, heif_file.data,
+                "raw", heif_file.mode, heif_file.stride
+            )
+        else:
+            image = Image.open(uploaded_file)
 
-    if st.button(analyse_label):
-        st.write(analysing)
-        ausgabe = random.choice(diagnosen)
-        st.subheader(f"✅ {ausgabe['diagnose']}")
-        st.markdown(ausgabe["symptome"])
-        st.markdown(ausgabe["hausmittel"])
+        # Anzeige
+        st.image(image, caption="📸 Vorschau / Preview", use_column_width=True)
+
+        # JPG-Export vorbereiten (auch bei HEIC)
+        buffer = io.BytesIO()
+        image.convert("RGB").save(buffer, format="JPEG")
+        buffer.seek(0)
+
+        # Download-Button
+        st.download_button(
+            label="📥 Konvertiertes Bild herunterladen (JPG)",
+            data=buffer,
+            file_name="leafcura_upload.jpg",
+            mime="image/jpeg"
+        )
+
+        # Analyse-Button
+        if st.button(analyse_button):
+            st.write(analysing)
+            st.subheader(diagnosis)
+            st.markdown(symptoms)
+            st.markdown(remedies)
+
+    except UnidentifiedImageError:
+        st.error(error_text)
+    except Exception as e:
+        st.error(f"⚠️ Fehler beim Verarbeiten der Datei: {e}")
