@@ -1,81 +1,110 @@
 import streamlit as st
-from PIL import Image, UnidentifiedImageError
+from PIL import Image
 import io
-import pyheif
+import os
 
-# Seitenlayout & Icon
+# Optional für HEIC
+try:
+    import pyheif
+except ImportError:
+    pyheif = None
+
+from fpdf import FPDF
+
+# Seiteneinstellungen
 st.set_page_config(
     page_title="Leafcura",
     page_icon="leafcurafix_favicon_512x512.png",
     layout="centered"
 )
 
-# Logo
-logo = Image.open("leafcura_logo.png")
-st.image(logo, width=200)
+# Logo anzeigen
+if os.path.exists("leafcura_logo.png"):
+    logo = Image.open("leafcura_logo.png")
+    st.image(logo, width=200)
 
-# Sprache auswählen
+# Sprache wählen
 lang = st.sidebar.radio("Sprache / Language", ("Deutsch", "English"))
 
-# Sprachabhängige Texte
+# Texte je nach Sprache
 if lang == "Deutsch":
     st.title("LeafcuraFix – Blattdiagnose & Hausmittel")
     upload_label = "📷 Lade ein Bild deines Pflanzenblatts hoch:"
-    analyse_button = "🔍 Analyse starten"
-    analysing = "Analyse läuft..."
+    analysing = "🔍 Analyse läuft..."
     diagnosis = "Diagnose: Stickstoffmangel"
     symptoms = "**Symptome:** Vergilbung älterer Blätter, verlangsamtes Wachstum"
     remedies = "**Hausmittel:**\n- Kaffeesatz ins Substrat\n- Brennnesseljauche\n- pH-Wert zwischen 6.0–6.5 halten"
-    error_text = "❌ Bild konnte nicht geladen werden. Bitte lade ein gültiges JPG, PNG oder HEIC hoch."
+    download_button_label = "📄 Diagnosebericht als PDF herunterladen"
 else:
     st.title("LeafcuraFix – Leaf Diagnosis & Natural Remedies")
     upload_label = "📷 Upload a photo of your plant leaf:"
-    analyse_button = "🔍 Start analysis"
-    analysing = "Analyzing..."
+    analysing = "🔍 Analyzing..."
     diagnosis = "Diagnosis: Nitrogen Deficiency"
     symptoms = "**Symptoms:** Yellowing of older leaves, slowed growth"
-    remedies = "**Remedies:**\n- Coffee grounds\n- Nettle tea\n- Maintain pH between 6.0–6.5"
-    error_text = "❌ Could not load image. Please upload a valid JPG, PNG, or HEIC file."
+    remedies = "**Home Remedies:**\n- Add used coffee grounds\n- Use nettle tea\n- Maintain pH between 6.0–6.5"
+    download_button_label = "📄 Download diagnosis report as PDF"
 
-# Bild hochladen
+# Datei-Upload
 uploaded_file = st.file_uploader(upload_label, type=["jpg", "jpeg", "png", "heic"])
 
+image = None
 if uploaded_file:
-    try:
-        # HEIC-Bilder erkennen und konvertieren
-        if uploaded_file.name.lower().endswith(".heic"):
-            heif_file = pyheif.read(uploaded_file.read())
-            image = Image.frombytes(
-                heif_file.mode, heif_file.size, heif_file.data,
-                "raw", heif_file.mode, heif_file.stride
-            )
-        else:
-            image = Image.open(uploaded_file)
-
-        # Anzeige
-        st.image(image, caption="Preview", use_container_width=True)
-
-        # JPG-Export vorbereiten (auch bei HEIC)
-        buffer = io.BytesIO()
-        image.convert("RGB").save(buffer, format="JPEG")
-        buffer.seek(0)
-
-        # Download-Button
-        st.download_button(
-            label="📥 Konvertiertes Bild herunterladen (JPG)",
-            data=buffer,
-            file_name="leafcura_upload.jpg",
-            mime="image/jpeg"
+    file_ext = uploaded_file.name.split(".")[-1].lower()
+    if file_ext == "heic" and pyheif:
+        heif_file = pyheif.read(uploaded_file.read())
+        image = Image.frombytes(
+            heif_file.mode, heif_file.size, heif_file.data, "raw", heif_file.mode, heif_file.stride
         )
+    else:
+        try:
+            image = Image.open(uploaded_file)
+        except Exception as e:
+            st.error("❌ Bild konnte nicht geöffnet werden.")
 
-        # Analyse-Button
-        if st.button(analyse_button):
-            st.write(analysing)
-            st.subheader(diagnosis)
-            st.markdown(symptoms)
-            st.markdown(remedies)
+    if image:
+        st.image(image, caption="📸 Vorschau", use_container_width=True)
+        st.write(analysing)
 
-    except UnidentifiedImageError:
-        st.error(error_text)
-    except Exception as e:
-        st.error(f"⚠️ Fehler beim Verarbeiten der Datei: {e}")
+        # Diagnose-Anzeige
+        st.subheader(diagnosis)
+        st.markdown(symptoms)
+        st.markdown(remedies)
+
+        # PDF generieren
+        def generate_pdf():
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Helvetica", "B", 16)
+            pdf.cell(0, 10, "LeafcuraFix Diagnosebericht", ln=True, align="C")
+            pdf.ln(10)
+
+            pdf.set_font("Helvetica", "B", 14)
+            pdf.cell(0, 10, "Diagnose", ln=True)
+            pdf.set_font("Helvetica", "", 12)
+            pdf.multi_cell(0, 10, diagnosis.replace("Diagnose: ", "").replace("Diagnosis: ", ""))
+            pdf.ln(5)
+
+            pdf.set_font("Helvetica", "B", 14)
+            pdf.cell(0, 10, "Symptome / Symptoms", ln=True)
+            pdf.set_font("Helvetica", "", 12)
+            pdf.multi_cell(0, 10, symptoms.replace("**Symptome:**", "").replace("**Symptoms:**", "").strip())
+            pdf.ln(5)
+
+            pdf.set_font("Helvetica", "B", 14)
+            pdf.cell(0, 10, "Hausmittel / Remedies", ln=True)
+            pdf.set_font("Helvetica", "", 12)
+            pdf.multi_cell(0, 10, remedies.replace("**Hausmittel:**", "").replace("**Home Remedies:**", "").strip())
+
+            buffer = io.BytesIO()
+            pdf.output(buffer)
+            buffer.seek(0)
+            return buffer
+
+        # PDF Download-Button
+        pdf_file = generate_pdf()
+        st.download_button(
+            label=download_button_label,
+            data=pdf_file,
+            file_name="leafcura_diagnose.pdf",
+            mime="application/pdf"
+        )
