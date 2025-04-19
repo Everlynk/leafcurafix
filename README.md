@@ -28,7 +28,7 @@ Lade ein Foto vom Blatt deiner Pflanze hoch – die App erkennt typische Mängel
 ## 🚀 Lokale Installation
 
 ```bash
-git clone https://github.com/dein-user/leafcurafix.git
+git clone https://github.com/everlynk/leafcurafix.git
 cd leafcurafix
 pip install -r requirements.txt
 streamlit run App.py
@@ -49,7 +49,7 @@ streamlit run App.py
 Du hast Ideen, willst etwas verbessern oder neue Pflanzen hinzufügen?  
 Super! Forke das Repo, erstelle einen Branch und schicke gerne einen Pull Request.
 
-Oder öffne ein [Issue](https://github.com/dein-user/leafcurafix/issues) mit deinem Vorschlag, Feedback oder Bug-Report 💡
+Oder öffne ein [Issue](https://github.com/everlynk/leafcurafix/issues) mit deinem Vorschlag, Feedback oder Bug-Report 💡
 
 ---
 
