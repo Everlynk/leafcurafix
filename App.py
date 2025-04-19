@@ -74,30 +74,32 @@ if uploaded_file:
         def generate_pdf():
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_font("Helvetica", "B", 16)
+            pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
+            pdf.set_font("DejaVu", size=14)
+
             pdf.cell(0, 10, "LeafcuraFix Diagnosebericht", ln=True, align="C")
             pdf.ln(10)
 
-            pdf.set_font("Helvetica", "B", 14)
+            pdf.set_font("DejaVu", "B", 12)
             pdf.cell(0, 10, "Diagnose", ln=True)
-            pdf.set_font("Helvetica", "", 12)
+            pdf.set_font("DejaVu", "", 12)
             pdf.multi_cell(0, 10, diagnosis.replace("Diagnose: ", "").replace("Diagnosis: ", ""))
             pdf.ln(5)
 
-            pdf.set_font("Helvetica", "B", 14)
+            pdf.set_font("DejaVu", "B", 12)
             pdf.cell(0, 10, "Symptome / Symptoms", ln=True)
-            pdf.set_font("Helvetica", "", 12)
+            pdf.set_font("DejaVu", "", 12)
             pdf.multi_cell(0, 10, symptoms.replace("**Symptome:**", "").replace("**Symptoms:**", "").strip())
             pdf.ln(5)
 
-            pdf.set_font("Helvetica", "B", 14)
+            pdf.set_font("DejaVu", "B", 12)
             pdf.cell(0, 10, "Hausmittel / Remedies", ln=True)
-            pdf.set_font("Helvetica", "", 12)
+            pdf.set_font("DejaVu", "", 12)
             pdf.multi_cell(0, 10, remedies.replace("**Hausmittel:**", "").replace("**Home Remedies:**", "").strip())
 
             buffer = io.BytesIO()
-            pdf.output(buffer)
-            buffer.seek(0)
+            pdf_output = pdf.output(dest="S").encode("latin1")
+            buffer = io.BytesIO(pdf_output)
             return buffer
 
         # PDF Download-Button
