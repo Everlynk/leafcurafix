@@ -72,40 +72,43 @@ if uploaded_file:
 
         # PDF generieren
         def generate_pdf():
-            pdf = FPDF()
-            pdf.add_page()
-            font_path = "DejaVuSans.ttf"
-            if os.path.exists(font_path):
-                pdf.add_font("DejaVu", "", font_path, uni=True)
-                pdf.set_font("DejaVu", size=14)
-            else:
-                pdf.set_font("Helvetica", size=14)  # Fallback
+    pdf = FPDF()
+    pdf.add_page()
 
-            pdf.cell(0, 10, "LeafcuraFix Diagnosebericht", ln=True, align="C")
-            pdf.ln(10)
+    font_path = os.path.join(os.getcwd(), "DejaVuSans.ttf")
+    if os.path.exists(font_path):
+        pdf.add_font("DejaVu", "", font_path, uni=True)
+        pdf.add_font("DejaVu", "B", font_path, uni=True)
+        pdf.set_font("DejaVu", size=14)
+    else:
+        pdf.set_font("Helvetica", size=14)  # Fallback
 
-            pdf.set_font("DejaVu", "B", 12)
-            pdf.cell(0, 10, "Diagnose", ln=True)
-            pdf.set_font("DejaVu", "", 12)
-            pdf.multi_cell(0, 10, diagnosis.replace("Diagnose: ", "").replace("Diagnosis: ", ""))
-            pdf.ln(5)
+    pdf.cell(0, 10, "LeafcuraFix Diagnosebericht", ln=True, align="C")
+    pdf.ln(10)
 
-            pdf.set_font("DejaVu", "B", 12)
-            pdf.cell(0, 10, "Symptome / Symptoms", ln=True)
-            pdf.set_font("DejaVu", "", 12)
-            pdf.multi_cell(0, 10, symptoms.replace("**Symptome:**", "").replace("**Symptoms:**", "").strip())
-            pdf.ln(5)
+    pdf.set_font("DejaVu", "B", 12)
+    pdf.cell(0, 10, "Diagnose", ln=True)
+    pdf.set_font("DejaVu", "", 12)
+    pdf.multi_cell(0, 10, diagnosis.replace("Diagnose: ", "").replace("Diagnosis: ", ""))
+    pdf.ln(5)
 
-            pdf.set_font("DejaVu", "B", 12)
-            pdf.cell(0, 10, "Hausmittel / Remedies", ln=True)
-            pdf.set_font("DejaVu", "", 12)
-            pdf.multi_cell(0, 10, remedies.replace("**Hausmittel:**", "").replace("**Home Remedies:**", "").strip())
+    pdf.set_font("DejaVu", "B", 12)
+    pdf.cell(0, 10, "Symptome / Symptoms", ln=True)
+    pdf.set_font("DejaVu", "", 12)
+    pdf.multi_cell(0, 10, symptoms.replace("**Symptome:**", "").replace("**Symptoms:**", "").strip())
+    pdf.ln(5)
 
-            # PDF korrekt streamen
-            buffer = io.BytesIO()
-            pdf.output(buffer)
-            buffer.seek(0)
-            return buffer
+    pdf.set_font("DejaVu", "B", 12)
+    pdf.cell(0, 10, "Hausmittel / Remedies", ln=True)
+    pdf.set_font("DejaVu", "", 12)
+    pdf.multi_cell(0, 10, remedies.replace("**Hausmittel:**", "").replace("**Home Remedies:**", "").strip())
+
+    buffer = io.BytesIO()
+    pdf_output = pdf.output(dest="S").encode("latin1")
+    buffer.write(pdf_output)
+    buffer.seek(0)
+    return buffer
+
 
         # PDF Download-Button
         pdf_file = generate_pdf()
