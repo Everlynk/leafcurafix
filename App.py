@@ -71,7 +71,7 @@ if uploaded_file:
         st.markdown(remedies)
 
         # PDF generieren
-                def generate_pdf():
+        def generate_pdf():
             pdf = FPDF()
             pdf.add_page()
 
