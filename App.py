@@ -53,7 +53,7 @@ if uploaded_file:
             image = Image.open(uploaded_file)
 
         # Anzeige
-        st.image(image, caption="📸 Vorschau / Preview", use_column_width=True)
+        st.image(image, caption="Preview", use_container_width=True)
 
         # JPG-Export vorbereiten (auch bei HEIC)
         buffer = io.BytesIO()
