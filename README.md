@@ -14,7 +14,7 @@ Lade ein Foto vom Blatt deiner Pflanze hoch – die App erkennt typische Mängel
 ## ✅ Features
 
 - 🌱 Funktioniert mit gängigen Pflanzen (z. B. *Cannabis*, *Tomate*, *Basilikum*)
-- 🧠 Sofort-Diagnose per KI
+- 🧠 Sofort-Diagnose per KI (aktuell simuliert)
 - 🧪 Hausmittel-Vorschläge (z. B. Kaffeesatz, Essig, Backpulver)
 - 🌐 Zweisprachig: Deutsch & Englisch
 - 📱 Mobilfreundlich (auch für iPhone)
@@ -39,8 +39,41 @@ streamlit run App.py
 ## ☁️ Deployment via Streamlit Cloud
 
 1. Forke dieses Repository oder lade es auf GitHub hoch  
-2. Öffne [Streamlit Cloud](https://streamlit.io/cloud)
-3. Erstelle eine neue App und verlinke dein Repo (`App.py` als Main File)
+2. Öffne [Streamlit Cloud](https://streamlit.io/cloud)  
+3. Erstelle eine neue App und gib als Hauptdatei `App.py` an
+
+---
+
+## 🤝 Beitrag leisten (Contributing)
+
+Du hast Ideen, willst etwas verbessern oder neue Pflanzen hinzufügen?  
+Super! Forke das Repo, erstelle einen Branch und schicke gerne einen Pull Request.
+
+Oder öffne ein [Issue](https://github.com/dein-user/leafcurafix/issues) mit deinem Vorschlag, Feedback oder Bug-Report 💡
+
+---
+
+## 🧰 Technologie-Stack
+
+| Tool       | Zweck                         |
+|------------|-------------------------------|
+| [Streamlit](https://streamlit.io)          | Web-App Frontend           |
+| [Pillow](https://python-pillow.org/)       | Bildverarbeitung           |
+| [pyheif](https://pypi.org/project/pyheif/) | HEIC-Unterstützung         |
+| [fpdf](https://py-pdf.github.io/fpdf2/)    | PDF-Erstellung             |
+| Python 3.11                                | Programmiersprache         |
+
+---
+
+## 🖼️ Screenshots
+
+**Startseite mit Upload:**  
+<img src="leafcura_screenshot1.png" alt="Startansicht" width="600"/>
+
+**Analyse-Ergebnis mit Download:**  
+<img src="leafcura_screenshot2.png" alt="Analyse" width="600"/>
+
+> *(Speichere deine Screenshots im Projektordner – als `leafcura_screenshot1.png`, `leafcura_screenshot2.png`)*
 
 ---
 
