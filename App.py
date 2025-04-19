@@ -35,7 +35,47 @@ if uploaded_file:
     st.image(image, caption="Preview", use_column_width=True)
     st.write(analysing)
 
-    # Demo-Ausgabe (Platzhalter für KI)
-    st.subheader(diagnosis)
-    st.markdown(symptoms)
-    st.markdown(remedies)
+        import random
+
+    if lang == "Deutsch":
+        diagnosen = [
+            {
+                "diagnose": "Stickstoffmangel",
+                "symptome": "**Symptome:** Vergilbung älterer Blätter, verlangsamtes Wachstum",
+                "hausmittel": "**Hausmittel:**\n- Kaffeesatz\n- Brennnesseljauche\n- pH-Wert 6.0–6.5"
+            },
+            {
+                "diagnose": "Kaliummangel",
+                "symptome": "**Symptome:** Braune Blattspitzen, eingerollte Ränder",
+                "hausmittel": "**Hausmittel:**\n- Bananenschale\n- Holzasche (sparsam)"
+            },
+            {
+                "diagnose": "Mehltau",
+                "symptome": "**Symptome:** Weißer Belag auf Blattoberfläche",
+                "hausmittel": "**Hausmittel:**\n- 1 Teil Milch + 9 Teile Wasser\n- Natronlösung"
+            }
+        ]
+    else:
+        diagnosen = [
+            {
+                "diagnose": "Nitrogen Deficiency",
+                "symptome": "**Symptoms:** Yellowing of older leaves, stunted growth",
+                "hausmittel": "**Remedies:**\n- Coffee grounds\n- Nettle tea\n- Keep pH 6.0–6.5"
+            },
+            {
+                "diagnose": "Potassium Deficiency",
+                "symptome": "**Symptoms:** Brown leaf tips, curled edges",
+                "hausmittel": "**Remedies:**\n- Banana peel\n- Ash (sparingly)"
+            },
+            {
+                "diagnose": "Powdery Mildew",
+                "symptome": "**Symptoms:** White powdery coating on leaves",
+                "hausmittel": "**Remedies:**\n- Milk-water spray (1:9)\n- Baking soda solution"
+            }
+        ]
+
+    ausgabe = random.choice(diagnosen)
+    st.subheader(f"🔍 {ausgabe['diagnose']}")
+    st.markdown(ausgabe["symptome"])
+    st.markdown(ausgabe["hausmittel"])
+
