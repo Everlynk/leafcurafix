@@ -5,8 +5,8 @@
 LeafcuraFix ist deine smarte WebApp zur Pflanzenpflege.  
 Lade ein Foto vom Blatt deiner Pflanze hoch – die App erkennt typische Mängel oder Krankheiten und zeigt dir sofort natürliche Lösungen, die du mit einfachen Hausmitteln umsetzen kannst.
 
-[![Streamlit App](https://img.shields.io/badge/LeafcuraFix%20Live%20App-🌐-blue?logo=streamlit)](https://leafcurafix.streamlit.app)
-[![Built with Streamlit](https://img.shields.io/badge/built%20with-Streamlit-orange?logo=streamlit)](https://streamlit.io)
+[![Streamlit App](https://img.shields.io/badge/LeafcuraFix%20Live%20App-🌐-blue?logo=streamlit)](https://leafcurafix.streamlit.app)  
+[![Built with Streamlit](https://img.shields.io/badge/built%20with-Streamlit-orange?logo=streamlit)](https://streamlit.io)  
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
@@ -32,3 +32,19 @@ git clone https://github.com/dein-user/leafcurafix.git
 cd leafcurafix
 pip install -r requirements.txt
 streamlit run App.py
+```
+
+---
+
+## ☁️ Deployment via Streamlit Cloud
+
+1. Forke dieses Repository oder lade es auf GitHub hoch  
+2. Öffne [Streamlit Cloud](https://streamlit.io/cloud)
+3. Erstelle eine neue App und verlinke dein Repo (`App.py` als Main File)
+
+---
+
+### 📄 Lizenz
+
+Dieses Projekt steht unter der [MIT-Lizenz](./Licence) – frei nutzbar und anpassbar.  
+Keine Gewährleistung – Nutzung auf eigene Verantwortung.
