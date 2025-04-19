@@ -74,9 +74,12 @@ if uploaded_file:
         def generate_pdf():
             pdf = FPDF()
             pdf.add_page()
-            font_path = os.path.join(os.getcwd(), "DejaVuSans.ttf")
-            pdf.add_font("DejaVu", "", font_path, uni=True)
-            pdf.set_font("DejaVu", size=14)
+            font_path = "DejaVuSans.ttf"
+            if os.path.exists(font_path):
+                pdf.add_font("DejaVu", "", font_path, uni=True)
+                pdf.set_font("DejaVu", size=14)
+            else:
+                pdf.set_font("Helvetica", size=14)  # Fallback
 
             pdf.cell(0, 10, "LeafcuraFix Diagnosebericht", ln=True, align="C")
             pdf.ln(10)
