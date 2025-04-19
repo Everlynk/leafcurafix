@@ -20,60 +20,62 @@ lang = st.sidebar.radio("Sprache / Language", ("Deutsch", "English"))
 if lang == "Deutsch":
     st.title("LeafcuraFix – Blattdiagnose & Hausmittel")
     upload_label = "📷 Lade ein Bild deines Pflanzenblatts hoch:"
+    analyse_label = "🔬 Analyse starten"
     analysing = "🔍 Analyse läuft..."
 else:
     st.title("LeafcuraFix – Leaf Diagnosis & Natural Remedies")
     upload_label = "📷 Upload a photo of your plant leaf:"
+    analyse_label = "🔬 Start analysis"
     analysing = "🔍 Analyzing..."
 
-# Datei-Upload
+# Diagnose-Logik vorbereiten
+if lang == "Deutsch":
+    diagnosen = [
+        {
+            "diagnose": "Stickstoffmangel",
+            "symptome": "**Symptome:** Vergilbung älterer Blätter, verlangsamtes Wachstum",
+            "hausmittel": "**Hausmittel:**\n- Kaffeesatz\n- Brennnesseljauche\n- pH-Wert 6.0–6.5"
+        },
+        {
+            "diagnose": "Kaliummangel",
+            "symptome": "**Symptome:** Braune Blattspitzen, eingerollte Ränder",
+            "hausmittel": "**Hausmittel:**\n- Bananenschale\n- Holzasche (sparsam)"
+        },
+        {
+            "diagnose": "Mehltau",
+            "symptome": "**Symptome:** Weißer Belag auf Blattoberfläche",
+            "hausmittel": "**Hausmittel:**\n- 1 Teil Milch + 9 Teile Wasser\n- Natronlösung"
+        }
+    ]
+else:
+    diagnosen = [
+        {
+            "diagnose": "Nitrogen Deficiency",
+            "symptome": "**Symptoms:** Yellowing of older leaves, stunted growth",
+            "hausmittel": "**Remedies:**\n- Coffee grounds\n- Nettle tea\n- Keep pH 6.0–6.5"
+        },
+        {
+            "diagnose": "Potassium Deficiency",
+            "symptome": "**Symptoms:** Brown leaf tips, curled edges",
+            "hausmittel": "**Remedies:**\n- Banana peel\n- Wood ash (sparingly)"
+        },
+        {
+            "diagnose": "Powdery Mildew",
+            "symptome": "**Symptoms:** White powdery coating on leaves",
+            "hausmittel": "**Remedies:**\n- Milk-water spray (1:9)\n- Baking soda solution"
+        }
+    ]
+
+# Bild-Upload & Analyse
 uploaded_file = st.file_uploader(upload_label, type=["jpg", "jpeg", "png"])
 
 if uploaded_file:
     image = Image.open(uploaded_file)
     st.image(image, caption="📸 Vorschau / Preview", use_column_width=True)
-    st.write(analysing)
 
-    # Diagnose-Logik mit zufälliger Auswahl
-    if lang == "Deutsch":
-        diagnosen = [
-            {
-                "diagnose": "Stickstoffmangel",
-                "symptome": "**Symptome:** Vergilbung älterer Blätter, verlangsamtes Wachstum",
-                "hausmittel": "**Hausmittel:**\n- Kaffeesatz\n- Brennnesseljauche\n- pH-Wert 6.0–6.5"
-            },
-            {
-                "diagnose": "Kaliummangel",
-                "symptome": "**Symptome:** Braune Blattspitzen, eingerollte Ränder",
-                "hausmittel": "**Hausmittel:**\n- Bananenschale\n- Holzasche (sparsam)"
-            },
-            {
-                "diagnose": "Mehltau",
-                "symptome": "**Symptome:** Weißer Belag auf Blattoberfläche",
-                "hausmittel": "**Hausmittel:**\n- 1 Teil Milch + 9 Teile Wasser\n- Natronlösung"
-            }
-        ]
-    else:
-        diagnosen = [
-            {
-                "diagnose": "Nitrogen Deficiency",
-                "symptome": "**Symptoms:** Yellowing of older leaves, stunted growth",
-                "hausmittel": "**Remedies:**\n- Coffee grounds\n- Nettle tea\n- Keep pH 6.0–6.5"
-            },
-            {
-                "diagnose": "Potassium Deficiency",
-                "symptome": "**Symptoms:** Brown leaf tips, curled edges",
-                "hausmittel": "**Remedies:**\n- Banana peel\n- Wood ash (sparingly)"
-            },
-            {
-                "diagnose": "Powdery Mildew",
-                "symptome": "**Symptoms:** White powdery coating on leaves",
-                "hausmittel": "**Remedies:**\n- Milk-water spray (1:9)\n- Baking soda solution"
-            }
-        ]
-
-    # Zufällige Diagnose anzeigen
-    ausgabe = random.choice(diagnosen)
-    st.subheader(f"✅ {ausgabe['diagnose']}")
-    st.markdown(ausgabe["symptome"])
-    st.markdown(ausgabe["hausmittel"])
+    if st.button(analyse_label):
+        st.write(analysing)
+        ausgabe = random.choice(diagnosen)
+        st.subheader(f"✅ {ausgabe['diagnose']}")
+        st.markdown(ausgabe["symptome"])
+        st.markdown(ausgabe["hausmittel"])
