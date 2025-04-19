@@ -74,7 +74,8 @@ if uploaded_file:
         def generate_pdf():
             pdf = FPDF()
             pdf.add_page()
-            pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
+            font_path = os.path.join(os.getcwd(), "DejaVuSans.ttf")
+            pdf.add_font("DejaVu", "", font_path, uni=True)
             pdf.set_font("DejaVu", size=14)
 
             pdf.cell(0, 10, "LeafcuraFix Diagnosebericht", ln=True, align="C")
@@ -97,9 +98,10 @@ if uploaded_file:
             pdf.set_font("DejaVu", "", 12)
             pdf.multi_cell(0, 10, remedies.replace("**Hausmittel:**", "").replace("**Home Remedies:**", "").strip())
 
+            # PDF korrekt streamen
             buffer = io.BytesIO()
-            pdf_output = pdf.output(dest="S").encode("latin1")
-            buffer = io.BytesIO(pdf_output)
+            pdf.output(buffer)
+            buffer.seek(0)
             return buffer
 
         # PDF Download-Button
