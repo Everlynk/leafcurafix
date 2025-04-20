@@ -9,6 +9,10 @@ try:
 except ImportError:
     pyheif = None
     
+import sys
+import os
+sys.path.append(os.path.dirname(__file__))
+
 from plant_gpt import ask_gpt
 
 from fpdf import FPDF
