@@ -8,6 +8,8 @@ try:
     import pyheif
 except ImportError:
     pyheif = None
+    
+from plant_gpt import ask_gpt
 
 from fpdf import FPDF
 
@@ -69,6 +71,15 @@ if uploaded_file:
         st.subheader(diagnosis)
         st.markdown(symptoms)
         st.markdown(remedies)
+    
+        # GPT-Erklärung einholen
+        with st.spinner("🧠 Frage ChatGPT nach einer natürlichen Erklärung..."):
+            try:
+                gpt_response = ask_gpt(diagnosis)
+                st.markdown("### 🧠 GPT erklärt:")
+                st.markdown(gpt_response)
+            except Exception as e:
+                st.error("⚠️ Fehler beim Abrufen der GPT-Antwort.")
 
         # PDF generieren
         def generate_pdf():
