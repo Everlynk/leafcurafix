@@ -1,0 +1,6 @@
+# Verhindert, dass secrets.toml versehentlich gepusht wird
+.streamlit/secrets.toml
+
+# Python-Cache & temporäre Dateien ignorieren
+__pycache__/
+*.pyc
